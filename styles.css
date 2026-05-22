@@ -1,0 +1,139 @@
+/* NotGoogleSearch — global styles */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; height: 100%; overflow-x: hidden; }
+body { font-family: 'Inter', -apple-system, system-ui, sans-serif; color: #1a1a1a; background: #fff; }
+
+/* ── Fade-out overlay ─────────────────────────────────────────────── */
+.fade-overlay {
+  position: fixed; inset: 0; background: #fff; z-index: 99999;
+  opacity: 0; pointer-events: none; transition: opacity var(--fade-dur, 3s) linear;
+}
+.fade-overlay.on { opacity: 1; pointer-events: auto; }
+
+/* ── Fake cursor ──────────────────────────────────────────────────── */
+.fake-cursor {
+  position: fixed; z-index: 9998; pointer-events: none;
+  transition: top .9s cubic-bezier(.45,.05,.25,1), left .9s cubic-bezier(.45,.05,.25,1);
+  filter: drop-shadow(0 2px 2px rgba(0,0,0,.35));
+  transform: translate(-2px, -2px);
+}
+.fake-cursor.no-trans { transition: none; }
+.fake-cursor.clicking { transform: translate(-2px, -2px) scale(.85); transition: transform .12s; }
+.fake-cursor.hidden { opacity: 0; }
+
+/* ── Click ripple (for the moment of click) ──────────────────────── */
+.click-ripple {
+  position: fixed; z-index: 9997; pointer-events: none;
+  width: 8px; height: 8px; border-radius: 50%;
+  border: 2px solid rgba(0,0,0,.45);
+  animation: ripple .55s ease-out forwards;
+}
+@keyframes ripple {
+  0% { width: 8px; height: 8px; opacity: 1; }
+  100% { width: 64px; height: 64px; opacity: 0; margin-left: -28px; margin-top: -28px; }
+}
+
+/* ── Typed caret ──────────────────────────────────────────────────── */
+.typed-caret { display: inline-block; width: 1px; background: currentColor; margin-left: 1px; animation: blink 1s steps(1) infinite; vertical-align: text-bottom; }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* ── Generic "loading" shimmer for results ───────────────────────── */
+.shimmer {
+  background: linear-gradient(90deg, #eee 0%, #f5f5f5 50%, #eee 100%);
+  background-size: 200% 100%; animation: shimmer 1.2s infinite linear; border-radius: 4px;
+}
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+/* ── Ad badge ────────────────────────────────────────────────────── */
+.ad-badge {
+  display: inline-block; padding: 1px 5px; font-size: 11px; font-weight: 700;
+  border-radius: 3px; vertical-align: middle; letter-spacing: .02em;
+}
+
+/* placeholder image */
+.ph-image {
+  background:
+    repeating-linear-gradient(45deg, rgba(0,0,0,.04) 0 8px, rgba(0,0,0,.07) 8px 16px),
+    #ddd;
+  display: flex; align-items: center; justify-content: center;
+  font-family: ui-monospace, Menlo, monospace; font-size: 10px; color: rgba(0,0,0,.45);
+  text-align: center; padding: 4px; border-radius: 2px;
+}
+
+/* ── Share dock ──────────────────────────────────────────────────── */
+.share-dock {
+  position: fixed; left: 14px; right: 14px; bottom: 14px; z-index: 100;
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(0,0,0,.78); color: #fff;
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  padding: 8px 10px; border-radius: 10px;
+  font-family: ui-monospace, Menlo, monospace; font-size: 12px;
+  max-width: 680px;
+}
+.share-dock-id { display: flex; align-items: center; gap: 6px; flex: 0 0 auto; padding: 0 4px; }
+.share-dock-id b { letter-spacing: .1em; }
+.share-dock-url { flex: 1 1 auto; display: flex; align-items: center; gap: 4px; min-width: 0; }
+.share-dock-url input {
+  flex: 1; min-width: 0; padding: 6px 10px; font-size: 11.5px;
+  background: rgba(255,255,255,.08); color: #fff;
+  border: 1px solid rgba(255,255,255,.18); border-radius: 6px;
+  font-family: inherit; outline: none;
+}
+.share-dock-url button, .share-dock-icons a {
+  flex: 0 0 auto; width: 28px; height: 28px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,.08); color: #fff;
+  border: 1px solid rgba(255,255,255,.16); border-radius: 6px;
+  cursor: pointer; transition: background .15s; text-decoration: none;
+}
+.share-dock-url button { background: rgba(255,255,255,.12); border: 0; }
+.share-dock-url button:hover, .share-dock-icons a:hover { background: rgba(255,255,255,.22); }
+.share-dock-icons { display: flex; gap: 4px; flex: 0 0 auto; }
+
+@media (max-width: 720px) {
+  .share-dock { flex-wrap: wrap; padding: 8px; gap: 6px; }
+  .share-dock-id { width: 100%; justify-content: space-between; padding: 0 4px; }
+  .share-dock-url { width: 100%; }
+  .share-dock-icons { width: 100%; justify-content: space-around; }
+  .share-dock-icons a { width: 36px; height: 36px; }
+}
+
+/* ── SERP responsive ─────────────────────────────────────────────── */
+@media (max-width: 760px) {
+  .serp-topbar {
+    flex-wrap: wrap !important;
+    padding: 10px 14px !important;
+    gap: 10px !important;
+  }
+  .serp-topbar > * {
+    max-width: 100% !important;
+  }
+  .serp-body {
+    grid-template-columns: 1fr !important;
+    padding: 14px !important;
+    padding-bottom: 200px !important;
+    gap: 22px !important;
+  }
+  .serp-body aside {
+    border-top: 1px solid rgba(0,0,0,.08);
+    padding-top: 18px;
+  }
+  /* Tabs scroll horizontally instead of wrapping */
+  .serp-tabs {
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    padding: 0 14px !important;
+    gap: 18px !important;
+    scrollbar-width: none;
+  }
+  .serp-tabs::-webkit-scrollbar { display: none; }
+  .serp-tabs > div { flex: 0 0 auto; }
+}
+
+/* ── Home responsive ─────────────────────────────────────────────── */
+@media (max-width: 560px) {
+  .home-engines { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; }
+  .home-cursor-row { flex-direction: column !important; }
+  .home-cursor-row button { width: 100% !important; }
+}
